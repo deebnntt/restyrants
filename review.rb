@@ -1,13 +1,13 @@
 class Review
 
-  attr_reader :title, :critic, :restaurant, :star_rating
+attr_reader :title, :customer, :star_rating, :product
 
-  @@all = []
+@@all = []
 
-  def initialize(title, critic, restaurant, star_rating)
+  def initialize(title, customer, product, star_rating)
     @title = title
-    @critic = critic
-    @restaurant = restaurant
+    @customer = customer
+    @product = product
     @star_rating = star_rating
     @@all << self
   end
@@ -16,10 +16,30 @@ class Review
     @@all
   end
 
-  def self.find_by_title(title)
-    self.all.select do |bag_of_dicks|
-      bag_of_dicks.title == title
+  def self.iconic
+    self.all.select do |review|
+      review.title.include?("iconic")
     end
+  end
+
+  def self.reviewed_products
+    self.all.collect do |reviews|
+      reviews.product.name
+    end.uniq
+  end
+
+  def self.most_rated
+    rated_products =  self.all.collect { |reviews| reviews.product.name }
+    count =  Hash.new(0)
+    rated_products.each { |product| count[product] += 1 }
+    count.sort_by{|k,v| v}.reverse
+  end
+
+  def self.most_frequent_reviewer
+    customers =  self.all.collect { |reviews| reviews.customer.name }
+    count =  Hash.new(0)
+    customers.each { |customer| count[customer] += 1 }
+    count.sort_by{|k,v| v}.reverse
   end
 
 end
